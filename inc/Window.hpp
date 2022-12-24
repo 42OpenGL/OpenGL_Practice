@@ -8,13 +8,11 @@
 class Window
 {
 private:
-	int _width;
-	int _height;
+	int _width, _height;
 	std::string _name;
 	GLFWwindow * _window_ptr;
-	bool is_mouse_clicked_;
 	float mouse_x_, mouse_y_;
-public :
+	bool is_mouse_clicked_;
 public:
 	Window(int, int, const std::string &);
 	~Window();
@@ -29,15 +27,12 @@ public:
 	void SetMouseClicked(bool click) { is_mouse_clicked_ = click; }
 	void SetMouseX(float p) { mouse_x_ = p; }
 	void SetMouseY(float p) { mouse_y_ = p; }
-
-	/* Method */
 private :
-	/* Private Method */
 };
 
 Window::Window(int w, int h, const std::string &n)
 : _width(w), _height(h), _name(n), _window_ptr(nullptr)
-, is_mouse_clicked_(false), mouse_x_(-1), mouse_y_(-1)
+, mouse_x_(-1), mouse_y_(-1), is_mouse_clicked_(false)
 {
 	glfwWindowHint(GLFW_SAMPLES, 4); // 안티엘리어싱 x4
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // 최대버전: 그냥 glfw 버전
