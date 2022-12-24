@@ -33,5 +33,6 @@ target_link_libraries(ModelGL
 
 target_compile_definitions(ModelGL
 	PRIVATE
-	ROOT_PATH="${CMAKE_SOURCE_DIR}"
+	ROOT_PATH="${CMAKE_SOURCE_DIR}/"
+	SHADER_PATH="${CMAKE_SOURCE_DIR}/shaders/"
 )
