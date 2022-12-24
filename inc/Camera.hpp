@@ -1,4 +1,6 @@
 #pragma once
+
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -109,7 +111,6 @@ void Camera::go_foward(float step)
 {
 	glm::vec3 cam_foward = glm::vec3(_look_at[0].z, _look_at[1].z, _look_at[2].z) * -step;
 	_move(cam_foward);
-
 }
 
 void Camera::go_backward(float step)

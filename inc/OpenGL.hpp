@@ -1,12 +1,12 @@
 #ifndef OPENGL_HPP
 # define OPENGL_HPP
 
-/* CPP lib */
+/* CPP */
 # include <iostream>
 # include <exception>
 # include <vector>
 
-/* OpenGL lib */
+/* OpenGL */
 # include <glad.h>
 # include <GLFW/glfw3.h>
 
@@ -14,7 +14,7 @@
 #include "CharColor.hpp"
 #include "Window.hpp"
 
-void FrameCB(GLFWwindow * window, int width, int height);
+void FrameBufferSizeCB(GLFWwindow * window, int width, int height);
 void KeyboardCB(GLFWwindow * window, int key, int scancode, int action, int mods);
 void MouseMoveCB(GLFWwindow * w, double x, double y);
 void MouseClickCB(GLFWwindow * w, int button, int action, int mods);
@@ -32,8 +32,6 @@ public:
 	/*Getter*/
 	Window * GetWindow() const { return _window; }
 private :
-	void _Begin();
-	void _InitWindow();
 	void _Terminate();
 	void _InitCallbackFunctions();
 };
@@ -78,10 +76,10 @@ OpenGL::~OpenGL()
 void OpenGL::_InitCallbackFunctions()
 {
 	glfwSetKeyCallback(_window->Id(), KeyboardCB);
-	glfwSetFramebufferSizeCallback(_window->Id(), FrameCB);
+	glfwSetFramebufferSizeCallback(_window->Id(), FrameBufferSizeCB);
 }
 
-void FrameCB(GLFWwindow * window, int width, int height)
+void FrameBufferSizeCB(GLFWwindow * window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }

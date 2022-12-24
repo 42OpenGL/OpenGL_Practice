@@ -40,6 +40,7 @@ Window::Window(int w, int h, const std::string &n)
 	}
 }
 
+// GLFWwindow 관련 leak문제가 있다. 아직 해결 하는 법 모르겠음.
 Window::~Window()
 {
 	glfwDestroyWindow(_window_ptr);
