@@ -18,7 +18,7 @@ void main_process () {
 	std::cout << "[MODE START]" << std::endl;
 	OpenGL * GL = OpenGL::getInstance();
 	GL->SetShader("vert.vs", "frag.fs");
-	GL->SetCamera();
+	GL->SetCamera(glm::vec3(0,0,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
 	float vertices[] = {
 		0.25f,  0.5f, 0.0f,	1.0f, 1.0f, 1.0f,

@@ -39,7 +39,7 @@ public:
 	Window * GetWindow() const { return window_; }
 	GLuint GetShaderID() const { return shader_->Id(); }
 	const Camera * GetCamera() const { return camera_; }
-	Camera * GetCamera() 			{ return camera_; }
+	Camera * GetCamera() { return camera_; }
 	/*Setter*/
 	void SetShader(const std::string & vert, const std::string & frag);
 	void SetCamera(glm::vec3 eye, glm::vec3 center, glm::vec3 up);
@@ -100,6 +100,8 @@ void OpenGL::_InitCallbackFunctions()
 {
 	glfwSetKeyCallback(window_->Id(), KeyboardCB);
 	glfwSetFramebufferSizeCallback(window_->Id(), FrameBufferSizeCB);
+	glfwSetCursorPosCallback(window_->Id(), MouseMoveCB);
+	glfwSetMouseButtonCallback(window_->Id(), MouseClickCB);
 }
 
 void OpenGL::SetShader(const std::string & vert, const std::string & frag)
@@ -129,42 +131,66 @@ void FrameBufferSizeCB(GLFWwindow * window, int width, int height)
 
 void KeyboardCB(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
-	if (action != GLFW_PRESS)
-		return ;
-	switch (key)
+	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
-		case GLFW_KEY_ESCAPE :
+		Camera * cam = OpenGL::getInstance()->GetCamera();
+		if (key == GLFW_KEY_ESCAPE) {
 			glfwSetWindowShouldClose(window, true);
-			break ;
-		//case GLFW_KEY_UP : case GLFW_KEY_W :
-		//	camera_instance.go_foward();
-		//	break ;
-		//case GLFW_KEY_DOWN : case GLFW_KEY_S :
-		//	camera_instance.go_backward();
-		//	break ;
-		//case GLFW_KEY_LEFT : case GLFW_KEY_A :
-		//	camera_instance.go_left();
-		//	break ;
-		//case GLFW_KEY_RIGHT : case GLFW_KEY_D :
-		//	camera_instance.go_right();
-		//	break ;
-		//case GLFW_KEY_SPACE :
-		//	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		//		camera_instance.go_down();
-		//	else
-		//		camera_instance.go_up();
-		//	break ;
+		} else if (key == GLFW_KEY_UP || key == GLFW_KEY_W) {
+			cam->go_foward();
+		} else if (key == GLFW_KEY_DOWN || key == GLFW_KEY_S) {
+			cam->go_backward();
+		} else if (key == GLFW_KEY_LEFT || key == GLFW_KEY_A) {
+			cam->go_left();
+		} else if (key == GLFW_KEY_RIGHT || key == GLFW_KEY_D) {
+			cam->go_right();
+		} else if (key == GLFW_KEY_SPACE) {
+			if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				cam->go_down();
+			else
+				cam->go_up();
+		}
 	}
 }
 
-void MouseMoveCB(GLFWwindow * w, double x, double y)
+void MouseMoveCB(GLFWwindow * w, double xposIn, double yposIn)
 {
+	Window * window = OpenGL::getInstance()->GetWindow();
+	if (window->IsMouseClicked() == false) {
+		return ;
+	}
 
+	float lastx = window->GetMouseX();
+	float lasty = window->GetMouseY();
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	std::cout << "(" << xpos << "," << ypos << ")" << std::endl;
+	if (lastx < 0 || lasty < 0)
+	{
+		window->SetMouseX(xpos);
+		window->SetMouseY(ypos);
+		return ;
+	}
+
+	float xoffset = xpos - lastx;
+	float yoffset = lasty - ypos; // reversed since y-coordinates go from bottom to top
+	window->SetMouseX(xpos);
+	window->SetMouseY(ypos);
+
+	float sensitivity = 0.42f; // change this value to your liking
+
+	Camera * cam = OpenGL::getInstance()->GetCamera();
+	cam->rotate(glm::radians(sensitivity), glm::normalize(glm::vec3(-yoffset, xoffset, 0.0f)));
 }
 
 void MouseClickCB(GLFWwindow * w, int button, int action, int mods)
 {
-
+	Window * window = OpenGL::getInstance()->GetWindow();
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		window->SetMouseClicked(true);
+	else
+		window->SetMouseClicked(false);
 }
 
 #endif

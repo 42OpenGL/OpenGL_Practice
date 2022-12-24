@@ -6,6 +6,10 @@
 # include <sstream>
 
 # include <glad.h>
+
+# ifndef SHADER_PATH
+#  define SHADER_PATH "../shaders/"
+# endif
 class Shader
 {
 private :
@@ -46,6 +50,7 @@ Shader::~Shader()
 	if (shader_prog_) {
 		glDeleteProgram(shader_prog_);
 	}
+	std::cout << C_YELLOW << "Closing Shader" << C_RESET << std::endl;
 };
 
 std::string Shader::FileLoader_(const std::string &file) const
@@ -65,7 +70,7 @@ std::string Shader::FileLoader_(const std::string &file) const
 GLuint Shader::LoadShaderfile_(const std::string &file, GLenum type) const
 {
 	GLuint shader_id = glCreateShader(type); // 셰이더 오브젝트 생성
-	std::string shader_source = FileLoader_(file);
+	std::string shader_source = FileLoader_( std::string(SHADER_PATH) + file);
 	const char* shader_source_ptr = shader_source.data();
 	glShaderSource(shader_id, 1, &shader_source_ptr, nullptr); // 셰이더 소스파일 로드
 	glCompileShader(shader_id); // 셰이더 컴파일
