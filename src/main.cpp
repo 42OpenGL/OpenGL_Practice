@@ -16,8 +16,9 @@ struct Vertex
 
 void main_process () {
 	std::cout << "[MODE START]" << std::endl;
-	OpenGL GL;
-	Shader shader(std::string(SHADER_PATH)+"vert.vs", std::string(SHADER_PATH)+"frag.fs");
+	OpenGL * GL = OpenGL::getInstance();
+	GL->SetShader("vert.vs", "frag.fs");
+	GL->SetCamera();
 
 	float vertices[] = {
 		0.25f,  0.5f, 0.0f,	1.0f, 1.0f, 1.0f,
@@ -54,16 +55,27 @@ void main_process () {
 
 
 	std::cout << C_BOLD << "[MAIN] : Loop starts" << C_RESET << std::endl;
-	while (GL.OK())
+	GLuint shader = GL->GetShaderID();
+	const Camera * camera = GL->GetCamera();
+	glm::mat4 projection;
+	while (GL->OK())
 	{
 		glClearColor(0.2f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(shader.Id());
+		projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		GLuint projection_location = glGetUniformLocation(shader, "projection");
+		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
+
+        glm::mat4 view = camera->lookAt();
+		GLuint view_location = glGetUniformLocation(shader, "view");
+		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+
+		glUseProgram(shader);
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		glfwSwapBuffers(GL.GetWindow()->Id());
+		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
 	}
 }
