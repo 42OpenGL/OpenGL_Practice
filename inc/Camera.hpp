@@ -96,6 +96,7 @@ void Camera::rotate(float rad, glm::vec3 cam_axis)
 	glm::vec3 axis(global_axis.x, global_axis.y, global_axis.z);
 	glm::mat4 rotate_mat = glm::rotate(glm::mat4(1.0f), rad, axis);
 	eye_to_center = glm::vec3( rotate_mat * glm::vec4(eye_to_center, 0) );
+	_up = glm::vec3( rotate_mat * glm::vec4(_up, 0.0f));
 
 	this->_center = this->_eye + eye_to_center;
 	_look_at = glm::lookAt(this->_eye, this->_center, this->_up);
