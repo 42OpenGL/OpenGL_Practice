@@ -8,16 +8,14 @@
 /* OpenGL */
 # include <glad.h>
 # include <GLFW/glfw3.h>
-//# ifndef STB_IMAGE_IMPLEMENTATION
-//#  define STB_IMAGE_IMPLEMENTATION
-//# endif
-//# include <stb_image.h>
+# define STB_IMAGE_IMPLEMENTATION
+# include <stb_image.h>
 
 /* Custom */
-#include "CharColor.hpp"
-#include "Window.hpp"
-#include "Camera.hpp"
-#include "Shader.hpp"
+# include "CharColor.hpp"
+# include "Window.hpp"
+# include "Camera.hpp"
+# include "Shader.hpp"
 
 void FrameBufferSizeCB(GLFWwindow * window, int width, int height);
 void KeyboardCB(GLFWwindow * window, int key, int scancode, int action, int mods);
@@ -168,7 +166,7 @@ void MouseMoveCB(GLFWwindow * w, double xposIn, double yposIn)
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
-	std::cout << "(" << xpos << "," << ypos << ")" << std::endl;
+	//std::cout << "(" << xpos << "," << ypos << ")" << std::endl;
 	if (lastx < 0 || lasty < 0)
 	{
 		window->SetMouseX(xpos);

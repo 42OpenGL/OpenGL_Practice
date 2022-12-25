@@ -9,31 +9,16 @@
 #include "Mesh.hpp"
 #include "Model.hpp"
 
+#define BACKPACK	"backpack/backpack.obj"
+#define COIN		"coin/coin.fbx"
+
 void main_process () {
 	std::cout << "[MODE START]" << std::endl;
 	OpenGL * GL = OpenGL::getInstance();
-	GL->SetShader("vert.vs", "frag.fs");
-	GL->SetCamera(glm::vec3(3,0,0), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	GL->SetShader("model_vert.vs", "model_frag.fs");
+	GL->SetCamera(glm::vec3(0,0,20), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
-	//Model test_mode();
-	std::vector<Mesh> meshes = {};
-	std::vector<GLuint> indices = {0, 1, 2};
-
-	Mesh::Vertex vert1, vert2, vert3, vert4;
-	vert1.position.x =  0.0000f; vert1.position.y =  0.0000f; vert1.position.z =  1.2246f;
-	vert2.position.x =  1.1547f; vert2.position.y =  0.0000f; vert2.position.z = -0.4082f;
-	vert3.position.x = -0.5773f; vert3.position.y =  1.0000f; vert3.position.z = -0.4082f;
-	vert4.position.x = -0.5773f; vert4.position.y = -1.0000f; vert4.position.z = -0.4082f;
-	std::vector<Mesh::Vertex> face1 = {vert1, vert2, vert3};
-	std::vector<Mesh::Vertex> face2 = {vert1, vert3, vert4};
-	std::vector<Mesh::Vertex> face3 = {vert1, vert4, vert2};
-	std::vector<Mesh::Vertex> face4 = {vert2, vert3, vert4};
-	Mesh mesh1(face1, indices); meshes.push_back(mesh1);
-	Mesh mesh2(face2, indices); meshes.push_back(mesh2);
-	Mesh mesh3(face3, indices); meshes.push_back(mesh3);
-	Mesh mesh4(face4, indices); meshes.push_back(mesh4);
-
-	Model test_model(meshes);
+	Model test_model(BACKPACK);
 
 	std::cout << C_BOLD << "[MAIN] : Loop starts" << C_RESET << std::endl;
 	glEnable(GL_DEPTH_TEST);
@@ -54,7 +39,7 @@ void main_process () {
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
 
 		glUseProgram(shader);
-		test_model.Draw();
+		test_model.Draw(shader);
 
 		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
