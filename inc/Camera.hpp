@@ -20,7 +20,7 @@ class Camera
 		{
 			_eye += vec;
 			_center += vec;
-			std::cout << "move: _eye : " << _eye.x << ", " << _eye.y << ", " << _eye.z << std::endl;
+			//std::cout << "move: _eye : " << _eye.x << ", " << _eye.y << ", " << _eye.z << std::endl;
 			_look_at = glm::lookAt(this->_eye, this->_center, this->_up);
 		}
 	public: 
