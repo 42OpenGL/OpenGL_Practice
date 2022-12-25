@@ -4,11 +4,14 @@
 /* CPP */
 # include <iostream>
 # include <exception>
-# include <vector>
 
 /* OpenGL */
 # include <glad.h>
 # include <GLFW/glfw3.h>
+//# ifndef STB_IMAGE_IMPLEMENTATION
+//#  define STB_IMAGE_IMPLEMENTATION
+//# endif
+//# include <stb_image.h>
 
 /* Custom */
 #include "CharColor.hpp"

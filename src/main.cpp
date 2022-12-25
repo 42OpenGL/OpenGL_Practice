@@ -6,64 +6,46 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "OpenGL.hpp"
-#include "Shader.hpp"
-
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 color;
-};
+#include "Mesh.hpp"
+#include "Model.hpp"
 
 void main_process () {
 	std::cout << "[MODE START]" << std::endl;
 	OpenGL * GL = OpenGL::getInstance();
 	GL->SetShader("vert.vs", "frag.fs");
-	GL->SetCamera(glm::vec3(0,0,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	GL->SetCamera(glm::vec3(3,0,0), glm::vec3(0,0,0), glm::vec3(0,0,1));
 
-	float vertices[] = {
-		0.25f,  0.5f, 0.0f,	1.0f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-		-0.25f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f 
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
+	//Model test_mode();
+	std::vector<Mesh> meshes = {};
+	std::vector<GLuint> indices = {0, 1, 2};
 
-    unsigned int VBO, VAO, EBO;
+	Mesh::Vertex vert1, vert2, vert3, vert4;
+	vert1.position.x =  0.0000f; vert1.position.y =  0.0000f; vert1.position.z =  1.2246f;
+	vert2.position.x =  1.1547f; vert2.position.y =  0.0000f; vert2.position.z = -0.4082f;
+	vert3.position.x = -0.5773f; vert3.position.y =  1.0000f; vert3.position.z = -0.4082f;
+	vert4.position.x = -0.5773f; vert4.position.y = -1.0000f; vert4.position.z = -0.4082f;
+	std::vector<Mesh::Vertex> face1 = {vert1, vert2, vert3};
+	std::vector<Mesh::Vertex> face2 = {vert1, vert3, vert4};
+	std::vector<Mesh::Vertex> face3 = {vert1, vert4, vert2};
+	std::vector<Mesh::Vertex> face4 = {vert2, vert3, vert4};
+	Mesh mesh1(face1, indices); meshes.push_back(mesh1);
+	Mesh mesh2(face2, indices); meshes.push_back(mesh2);
+	Mesh mesh3(face3, indices); meshes.push_back(mesh3);
+	Mesh mesh4(face4, indices); meshes.push_back(mesh4);
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    glBindVertexArray(0); 
-
+	Model test_model(meshes);
 
 	std::cout << C_BOLD << "[MAIN] : Loop starts" << C_RESET << std::endl;
+	glEnable(GL_DEPTH_TEST);
 	GLuint shader = GL->GetShaderID();
 	const Camera * camera = GL->GetCamera();
 	glm::mat4 projection;
 	while (GL->OK())
 	{
 		glClearColor(0.2f, 0.5f, 0.5f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		GLuint projection_location = glGetUniformLocation(shader, "projection");
 		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -72,8 +54,7 @@ void main_process () {
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
 
 		glUseProgram(shader);
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		test_model.Draw();
 
 		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
