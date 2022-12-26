@@ -16,7 +16,6 @@ set(STB_IMAGE_DIR "${LIBRARY_DIR}/stb_image")
 
 set(SOURCE_FILES
 	${GLAD_DIR}/glad.c
-	#${STB_IMAGE_DIR}/stb_image.cpp
 	src/main.cpp
 )
 
@@ -32,7 +31,6 @@ target_include_directories(${PROJECT_NAME}
 	${GLAD_DIR}/
 	${GLM}/
 	${STB_IMAGE_DIR}/
-	#${ASSIMP_DIR}/include
 )
 
 target_compile_definitions(${PROJECT_NAME}
