@@ -1,4 +1,10 @@
 # OpenGL_Practice
-
-![image](./img/planet_cap.png)
-![image](./img/cyborg_cap.png)
+***
+> ### 실행 법
+```
+cd <traget_directory>
+cmake -Bbuild
+make -C build
+./ft_GL
+```
+***
