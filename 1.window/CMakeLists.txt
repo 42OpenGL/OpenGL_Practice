@@ -11,7 +11,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/")
 set(ROOT_DIR "${CMAKE_SOURCE_DIR}/..")
 set(LIBRARY_DIR "${ROOT_DIR}/libraries")
 set(GLAD_DIR "${LIBRARY_DIR}/glad")
-set(GLM_DIR "${LIBRARY_DIR}/glm")
 
 set(SOURCE_FILES
 	${GLAD_DIR}/glad.c
@@ -34,5 +33,4 @@ target_include_directories(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME}
 	PRIVATE
 	ROOT_PATH="${CMAKE_SOURCE_DIR}/"
-	SHADER_PATH="${CMAKE_SOURCE_DIR}/shaders/"
 )
