@@ -6,3 +6,7 @@
 */build/
 */openGL_wrapper
 */ft_GL
+
+
+# apple chore file
+events glfwinfo monitors reopen triangle-vulkan clipboard ft_GL iconify msaa unit cursor offscreen
