@@ -44,15 +44,6 @@ void main_process () {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-        //glm::mat4 view = camera->lookAt();
-
-		//GLuint projection_location = glGetUniformLocation(shader, "projection");
-		//glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
-
-		//GLuint view_location = glGetUniformLocation(shader, "view");
-		//glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
-
-		//glUseProgram(shader);
 
 		cube.Draw(projection, camera->lookAt());
 
