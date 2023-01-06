@@ -14,10 +14,10 @@ public:
 	typedef std::vector<glm::vec3> vertices_type;
 	typedef std::vector<unsigned int> indices_type;
 private:
-	Shader shader_;
-	const static glm::vec3 face_color_;
 	const static glm::vec3 line_color_;
 	const static indices_type indices_;
+	Shader shader_;
+	glm::vec3 face_color_;
 	vertices_type cube_;
 	float size_;
 	Type type_;
@@ -27,14 +27,13 @@ public:
 	Cube(const std::string &vertex_shader = "",
 		 const std::string &fragment_shader = "",
 		 float size = 1.0f, Type type = BOTH);
+	void SetColor(glm::vec4 color) {face_color_ = color;}
 	void Draw(const glm::mat4 &projection = glm::mat4(1.0),
 			  const glm::mat4 &view = glm::mat4(1.0),
 			  const glm::mat4 &model = glm::mat4(1.0)) const;
 };
 
 
-//Cube::Cube(float size, GLuint type)
-//: size_(size), type_(type), VAO_(0), VBO_(0), EBO_(0)
 Cube::Cube( const std::string &vertex_shader,
 			const std::string &fragment_shader,
 			float size, Type type)
@@ -76,6 +75,7 @@ void Cube::SetupCube()
 		glm::vec3( size,  size, size),
 		glm::vec3(-size,  size, size),
 	};
+	face_color_ = glm::vec3(0.8f, 0.4f, 0.2f);
 }
 
 //void Cube::Draw(GLuint shader_id)
@@ -97,7 +97,7 @@ void Cube::Draw(const glm::mat4 &projection,
 	glBindVertexArray(VAO_);
 	GLuint color_location = glGetUniformLocation(shader_id, "color");
 	if (type_ & FILL) {
-		glUniform3f(color_location, 0.8, 0.4, 0.2);
+		glUniform3f(color_location, face_color_.x, face_color_.y, face_color_.z);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices_.size() * 3, GL_UNSIGNED_INT, 0);
 	}
@@ -119,7 +119,6 @@ const Cube::indices_type Cube::indices_ = {
 	4, 5, 6,   4, 7, 6
 };
 
-const glm::vec3 Cube::face_color_ = glm::vec3(0.8f, 0.4f, 0.2f);
 const glm::vec3 Cube::line_color_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
 #endif

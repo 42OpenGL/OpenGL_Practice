@@ -27,7 +27,6 @@ class OpenGL
 private:
 	static OpenGL * opengl_;
 	Window * window_;
-	Shader * shader_;
 	Camera * camera_;
 	OpenGL( void );
 public:
@@ -38,11 +37,9 @@ public:
 
 	/*Getter*/
 	Window * GetWindow() const { return window_; }
-	//GLuint GetShaderID() const { return shader_->Id(); }
 	const Camera * GetCamera() const { return camera_; }
 	Camera * GetCamera() { return camera_; }
 	/*Setter*/
-	//void SetShader(const std::string & vert, const std::string & frag);
 	void SetCamera(glm::vec3 eye, glm::vec3 center, glm::vec3 up);
 private :
 	void _Terminate();
@@ -59,7 +56,7 @@ OpenGL * OpenGL::getInstance()
 }
 
 OpenGL::OpenGL( void )
-: window_(NULL), shader_(NULL), camera_(NULL)
+: window_(NULL), camera_(NULL)
 {
 	// glfw 초기화
 	if (!glfwInit()) {
@@ -92,7 +89,6 @@ OpenGL::~OpenGL()
 void OpenGL::_Terminate()
 {
 	delete window_;
-	delete shader_;
 	delete camera_;
 	glfwTerminate();
 }

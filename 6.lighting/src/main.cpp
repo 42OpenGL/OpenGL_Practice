@@ -9,25 +9,13 @@
 #include "OpenGL.hpp"
 #include "Cube.hpp"
 
-glm::vec3 cubePositions[] = {
-	glm::vec3( 0.0f,  0.0f,  0.0f),
-	glm::vec3( 2.0f,  5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3( 2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f,  3.0f, -7.5f),
-	glm::vec3( 1.3f, -2.0f, -2.5f),
-	glm::vec3( 1.5f,  2.0f, -2.5f),
-	glm::vec3( 1.5f,  0.2f, -1.5f),
-	glm::vec3(-1.3f,  1.0f, -1.5f)
-};
-
 void main_process () {
 	std::cout << "[MODE START]" << std::endl;
 	OpenGL * const GL = OpenGL::getInstance();
 	GL->SetCamera(glm::vec3(3,-1,2), glm::vec3(0,0,0), glm::vec3(0,0,1));
 	const Camera * const camera = GL->GetCamera();
-	const Cube cube("cube_vert.vs", "cube_frag.fs", 1, Cube::BOTH);
+	Cube cube("cube_vert.vs", "cube_frag.fs", 1, Cube::BOTH);
+	cube.SetColor(glm::vec4(1,1,1,1));
 
 	std::cout << (int)(Cube::LINE & Cube::LINE) << std::endl;
 	std::cout << (int)(Cube::LINE & Cube::FILL) << std::endl;
@@ -50,6 +38,7 @@ void main_process () {
 		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
 	}
+	//OpenGL::clearInstance();
 }
 
 int main() {
@@ -59,9 +48,3 @@ int main() {
 		std::cerr << e.what() << std::endl;
 	}
 }
-
-struct Vertex {
-	glm::vec3 position;
-	Vertex(float x, float y, float z) : position(x,y,z) {};
-	Vertex(const glm::vec3& v) : position(v) {};
-};

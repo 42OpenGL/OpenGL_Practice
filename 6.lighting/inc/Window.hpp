@@ -43,6 +43,7 @@ Window::Window(int w, int h, const std::string &n)
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	#endif
 
+	std::cout << C_YELLOW << "Creating Window" << C_RESET << std::endl;
 	_window_ptr = glfwCreateWindow(_width, _height, _name.c_str(), 0, 0);
 	if (_window_ptr == NULL) {
 		throw std::runtime_error("[Window] : fail to create window");
@@ -52,7 +53,7 @@ Window::Window(int w, int h, const std::string &n)
 // GLFWwindow 관련 leak문제가 있다. 아직 해결 하는 법 모르겠음.
 Window::~Window()
 {
-	glfwDestroyWindow(_window_ptr);
 	std::cout << C_YELLOW << "Closing Window" << C_RESET << std::endl;
+	glfwDestroyWindow(_window_ptr);
 }
 #endif
