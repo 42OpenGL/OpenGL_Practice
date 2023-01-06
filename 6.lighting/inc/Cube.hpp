@@ -94,9 +94,8 @@ void Cube::Draw(const glm::mat4 &projection,
 	glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
 
 	GLuint model_location = glGetUniformLocation(shader_id, "model");
-	glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
 	glUseProgram(shader_id);
-	/*****************************************************************/
 
 	glBindVertexArray(VAO_);
 	GLuint color_location = glGetUniformLocation(shader_id, "color");
