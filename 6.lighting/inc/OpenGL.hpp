@@ -38,11 +38,11 @@ public:
 
 	/*Getter*/
 	Window * GetWindow() const { return window_; }
-	GLuint GetShaderID() const { return shader_->Id(); }
+	//GLuint GetShaderID() const { return shader_->Id(); }
 	const Camera * GetCamera() const { return camera_; }
 	Camera * GetCamera() { return camera_; }
 	/*Setter*/
-	void SetShader(const std::string & vert, const std::string & frag);
+	//void SetShader(const std::string & vert, const std::string & frag);
 	void SetCamera(glm::vec3 eye, glm::vec3 center, glm::vec3 up);
 private :
 	void _Terminate();
@@ -105,12 +105,12 @@ void OpenGL::_InitCallbackFunctions()
 	glfwSetMouseButtonCallback(window_->Id(), MouseClickCB);
 }
 
-void OpenGL::SetShader(const std::string & vert, const std::string & frag)
-{
-	shader_ = new Shader(vert, frag);
-	if (shader_ == NULL)
-		throw std::runtime_error("[OpenGL] : fail to set shader");
-}
+//void OpenGL::SetShader(const std::string & vert, const std::string & frag)
+//{
+//	shader_ = new Shader(vert, frag);
+//	if (shader_ == NULL)
+//		throw std::runtime_error("[OpenGL] : fail to set shader");
+//}
 
 void OpenGL::SetCamera(glm::vec3 eye = glm::vec3(10,0,0), 
 						glm::vec3 center = glm::vec3(0,0,0),
