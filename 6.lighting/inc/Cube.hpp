@@ -10,6 +10,7 @@
 class Cube
 {
 public:
+	enum Type{LINE = 1, FILL = 2 , BOTH = 3};
 	typedef std::vector<glm::vec3> vertices_type;
 	typedef std::vector<unsigned int> indices_type;
 private:
@@ -19,18 +20,16 @@ private:
 	const static indices_type indices_;
 	vertices_type cube_;
 	float size_;
-	GLuint type_;
+	Type type_;
 	GLuint VAO_, VBO_, EBO_;
 	void SetupCube();
 public:
 	Cube(const std::string &vertex_shader = "",
 		 const std::string &fragment_shader = "",
-		 float size = 1.0f, GLuint type = GL_FILL);
+		 float size = 1.0f, Type type = BOTH);
 	void Draw(const glm::mat4 &projection = glm::mat4(1.0),
 			  const glm::mat4 &view = glm::mat4(1.0),
 			  const glm::mat4 &model = glm::mat4(1.0)) const;
-	//Cube(float size = 1.0f, GLuint type = GL_FILL);
-	//void Draw(GLuint shader_id);
 };
 
 
@@ -38,7 +37,7 @@ public:
 //: size_(size), type_(type), VAO_(0), VBO_(0), EBO_(0)
 Cube::Cube( const std::string &vertex_shader,
 			const std::string &fragment_shader,
-			float size, GLuint type)
+			float size, Type type)
 : shader_(vertex_shader, fragment_shader), size_(size), type_(type), VAO_(0), VBO_(0), EBO_(0)
 {
 	SetupCube();
@@ -85,8 +84,6 @@ void Cube::Draw(const glm::mat4 &projection,
 				const glm::mat4 &model) const
 {
 	GLuint shader_id = shader_.Id();
-	// SetupShader(matrix  3r)
-	/*****************************************************************/
 	GLuint projection_location = glGetUniformLocation(shader_id, "projection");
 	glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -99,15 +96,17 @@ void Cube::Draw(const glm::mat4 &projection,
 
 	glBindVertexArray(VAO_);
 	GLuint color_location = glGetUniformLocation(shader_id, "color");
-	glUniform3f(color_location, 0.8, 0.4, 0.2);
-	if (type_ == GL_FILL) {
+	if (type_ & FILL) {
+		glUniform3f(color_location, 0.8, 0.4, 0.2);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices_.size() * 3, GL_UNSIGNED_INT, 0);
-		glUniform3f(color_location, 0.1, 0.1, 0.1);
 	}
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(1.0f);
-	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+	if (type_ & LINE) {
+		glUniform3f(color_location, 0.1, 0.1, 0.1);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(3.0f);
+		glDrawElements(GL_TRIANGLES, indices_.size() * 3, GL_UNSIGNED_INT, 0);
+	}
 	glBindVertexArray(0);
 }
 

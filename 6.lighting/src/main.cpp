@@ -24,20 +24,18 @@ glm::vec3 cubePositions[] = {
 
 void main_process () {
 	std::cout << "[MODE START]" << std::endl;
-	OpenGL * GL = OpenGL::getInstance();
-	GL->SetShader("vert.vs", "frag.fs");
-	GL->SetCamera(glm::vec3(0,0,2), glm::vec3(0,0,0), glm::vec3(0,1,0));
+	OpenGL * const GL = OpenGL::getInstance();
+	GL->SetCamera(glm::vec3(3,-1,2), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	const Camera * const camera = GL->GetCamera();
+	const Cube cube("cube_vert.vs", "cube_frag.fs", 1, Cube::BOTH);
 
-
-	std::cout << C_BOLD << "[MAIN] : Loop starts" << C_RESET << std::endl;
-	glEnable(GL_DEPTH_TEST);
-	GLuint shader = GL->GetShaderID();
-	const Camera * camera = GL->GetCamera();
-
-	Cube cube("cube_vert.vs", "cube_frag.fs", 1.0f, GL_FILL);
+	std::cout << (int)(Cube::LINE & Cube::LINE) << std::endl;
+	std::cout << (int)(Cube::LINE & Cube::FILL) << std::endl;
 
 	glm::mat4 projection;
 	glm::vec3 color;
+	glEnable(GL_DEPTH_TEST);
+	std::cout << C_BOLD << "[MAIN] : Loop starts" << C_RESET << std::endl;
 	while (GL->OK())
 	{
 		glClearColor(0.2f, 0.5f, 0.5f, 1.0f);
@@ -45,7 +43,9 @@ void main_process () {
 
 		projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-		cube.Draw(projection, camera->lookAt());
+        glm::mat4 view = camera->lookAt();
+
+		cube.Draw(projection, view);
 
 		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
