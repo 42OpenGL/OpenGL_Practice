@@ -114,12 +114,13 @@ void Cube::Draw(const glm::mat4 &projection,
 
 const Cube::indices_type Cube::indices_ = {
 	0, 2, 1,   0, 2, 3,
-	1, 0, 4,   1, 5, 4,
+	1, 4, 0,   1, 4, 5,
 	1, 2, 6,   1, 5, 6,
-	1, 3, 7,   1, 4, 7,
+	0, 3, 7,   0, 4, 7,
 	2, 3, 7,   2, 6, 7,
 	4, 5, 6,   4, 7, 6
 };
+
 const glm::vec3 Cube::face_color_ = glm::vec3(0.8f, 0.4f, 0.2f);
 const glm::vec3 Cube::line_color_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
