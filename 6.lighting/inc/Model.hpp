@@ -7,7 +7,8 @@
 # include <assimp/scene.h>
 # include <assimp/postprocess.h>
 
-# include <Mesh.hpp>
+# include "Mesh.hpp"
+# include "Shader.hpp"
 
 unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
@@ -16,14 +17,25 @@ class Model
 public:
 	typedef std::vector<Mesh> meshes_type;
 private:
+	Shader shader_;
+	GLuint VAO_, VBO_, EBO_;
 	meshes_type meshes_;
 	Mesh::textures_type loaded_textures_;
 	std::string directory_;
 public:
-    Model(const meshes_type &meshes);
-	Model(const std::string &filename);
-    ~Model() {}
-	void Draw(GLuint shader) const;
+	Model(const std::string &filename, 
+		  const std::string &vertex_shader,
+		  const std::string &fragment_shader,
+		  bool is_stbi_flip = true);
+	~Model() {}
+	void Draw(const glm::mat4 &projection = glm::mat4(1.0),
+			  const glm::mat4 &view = glm::mat4(1.0),
+			  const glm::mat4 &model = glm::mat4(1.0)) const;
+	void Draw(glm::vec3 light_pos, glm::vec3 light_color, 
+					   const glm::mat4 &projection = glm::mat4(1.0),
+					   const glm::mat4 &view = glm::mat4(1.0),
+					   const glm::mat4 &model = glm::mat4(1.0)) const;
+
 private:
 	void LoadModel_(const std::string & filename);
 	void ProcessNode_(aiNode *node, const aiScene *scene);
@@ -36,21 +48,75 @@ private:
 /*   Member   */
 /**************/
 
-Model::Model(const meshes_type &meshes)
-: meshes_(meshes) {}
-
-Model::Model(const std::string &filename)
-: meshes_()
+Model::Model(const std::string &filename,
+			 const std::string &vertex_shader,
+			 const std::string &fragment_shader,
+			 bool is_stbi_flip)
+: shader_(vertex_shader, fragment_shader),
+  VAO_(0), VBO_(0), EBO_(0),
+//  meshes_(0),
+  loaded_textures_(), directory_("")
 {
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(is_stbi_flip);
 	LoadModel_( std::string(MODEL_PATH) + filename);
 }
 
-void Model::Draw(GLuint shader) const
+void Model::Draw(const glm::mat4 &projection,
+				 const glm::mat4 &view,
+				 const glm::mat4 &model) const
 {
+	GLuint shader_id = shader_.Id();
+	glUseProgram(shader_id);
+	GLuint projection_location = glGetUniformLocation(shader_id, "projection");
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
+
+	GLuint view_location = glGetUniformLocation(shader_id, "view");
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint model_location = glGetUniformLocation(shader_id, "model");
+	glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+
+	glBindVertexArray(VAO_);
+	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	meshes_type::const_iterator it = meshes_.begin();
 	for (; it != meshes_.end(); it++)
-		it->Draw(shader);
+		it->Draw(shader_id);
+
+	glBindVertexArray(0);
+}
+
+void Model::Draw(glm::vec3 light_pos, glm::vec3 light_color,
+						  const glm::mat4 &projection,
+				 		  const glm::mat4 &view,
+				 		  const glm::mat4 &model) const
+{
+	GLuint shader_id = shader_.Id();
+	glUseProgram(shader_id);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	GLuint projection_location = glGetUniformLocation(shader_id, "projection");
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
+
+	GLuint view_location = glGetUniformLocation(shader_id, "view");
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint model_location = glGetUniformLocation(shader_id, "model");
+	glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+
+	GLuint light_pos_location = glGetUniformLocation(shader_id, "lightPos");
+	glUniform3fv(light_pos_location, 1, glm::value_ptr(light_pos));
+
+	GLuint light_color_location = glGetUniformLocation(shader_id, "lightColor");
+	glUniform3fv(light_color_location, 1, glm::value_ptr(light_color));
+
+	glBindVertexArray(VAO_);
+	
+	meshes_type::const_iterator it = meshes_.begin();
+	for (; it != meshes_.end(); it++)
+		it->Draw(shader_id);
+
+	glBindVertexArray(0);
 }
 
 void Model::LoadModel_(const std::string & filename)

@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME}
 	glfw
-	#assimp
+	assimp
 	${CMAKE_DL_LIBS}
 )
 
@@ -39,5 +39,5 @@ target_compile_definitions(${PROJECT_NAME}
 	PRIVATE
 	ROOT_PATH="${CMAKE_SOURCE_DIR}/"
 	SHADER_PATH="${CMAKE_SOURCE_DIR}/shaders/"
-	#MODEL_PATH="${ROOT_DIR}/resource/model/"
+	MODEL_PATH="${ROOT_DIR}/resource/model/"
 )

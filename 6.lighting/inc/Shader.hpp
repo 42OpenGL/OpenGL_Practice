@@ -43,6 +43,7 @@ Shader::Shader(const std::string &vs, const std::string &fs)
 		std::string err_msg = "[Shader] : link failed.\n\t" + std::string(infoLog);
 		throw std::runtime_error(err_msg);
 	}
+	std::cout << "shader created : " << shader_prog_ << std::endl;
 }
 
 Shader::~Shader()
