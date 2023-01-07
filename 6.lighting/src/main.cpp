@@ -40,7 +40,7 @@ void main_process () {
         glm::mat4 view = camera->lookAt();
 
 		cube.Draw(projection, view);
-		test_model.Draw(glm::vec3(-1,1,1), glm::vec3(1.0f), projection, view);
+		test_model.Draw(glm::vec3(2,4,2), glm::vec3(1.0f), projection, view);
 
 		glfwSwapBuffers(GL->GetWindow()->Id());
 		glfwPollEvents(); 
