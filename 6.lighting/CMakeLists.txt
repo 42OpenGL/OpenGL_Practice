@@ -1,4 +1,5 @@
 #TODO: assimp,등등 큰 라이브러리 한곳에 두고 컴파일 되게 하기. window, mac  둘다 되는지 확인하기
+#TODO: 왜 build 파일에 glfw-3.3.8 이 또 생기는지 체크하기 내생각엔 add_subdirectory를 파보면 될듯?
 cmake_minimum_required(VERSION 3.13)
 
 message(STATUS 42OpenGL group study )
